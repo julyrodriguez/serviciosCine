@@ -39,7 +39,6 @@ Para facilitar la migración directa de la lógica, se han adjuntado los archivo
 
 ### Librerías Auxiliares y Lógica de Negocio (`code/lib/`)
 - **[cineConfig.ts](file:///home/julian/vacas-locas/serviciosMigracion/code/lib/cineConfig.ts)**: Recuperación de cantidad de salas por cine.
-- **[dbService.ts](file:///home/julian/vacas-locas/serviciosMigracion/code/lib/dbService.ts)** y **[firebaseConfig.ts](file:///home/julian/vacas-locas/serviciosMigracion/code/lib/firebaseConfig.ts)**: Configuración y utilidades de base de datos Firebase.
 - **[theme.ts](file:///home/julian/vacas-locas/serviciosMigracion/code/lib/theme.ts)**: Paleta de colores e identificadores de estilos UI.
 - **[useAuthUser.ts](file:///home/julian/vacas-locas/serviciosMigracion/code/lib/useAuthUser.ts)**: Hook de autenticación de usuario (cineId, email, etc.).
 - **Carpeta [marketing/](file:///home/julian/vacas-locas/serviciosMigracion/code/lib/marketing)**:
@@ -54,26 +53,16 @@ Para facilitar la migración directa de la lógica, se han adjuntado los archivo
 
 ---
 
-## 🗄️ Estructura de Datos en Firebase Firestore
+## 🔌 Capa de Abstracción de Base de Datos (`code/lib/dbService.ts`)
 
-Para que otra página o aplicación pueda adoptar estas tareas, debe conectarse a las siguientes colecciones y estructuras de Firestore:
-
-| Colección / Ruta en Firestore | Uso del Módulo | Datos Almacenados |
-| :--- | :--- | :--- |
-| `/cines/[cineId]/programacion_semanal/actual` | **Programación** | Objeto JSON con el listado de películas semanales, fecha de inicio (`startDate`) y timestamp. |
-| `/cines/[cineId]/programacion_semanal/[YYYY-MM-DD]` | **Programación** | Histórico de programaciones semanales guardadas por su fecha de inicio. |
-| `/cines/[cineId]/showtimes/[YYYY-MM-DD]` | **Marketing (API)** | Sesiones y horarios consumidos directamente de la API de Cinemark para realizar comparaciones automáticas. |
-| `/cines/[cineId]/eventos` | **Marketing** | Lista de eventos especiales programados (título, sala, fecha/hora) para adjuntar al plan impreso. |
-| `/cines/[cineId]/control_salas/active` | **Control de Salas** | Reporte activo de butacas rotas por sala: `{ issues: { [salaId]: { "F-12": { respaldo: true, asiento: false... } } } }`. |
-| `/cines/[cineId]/salas_layouts/[salaId]` | **Control de Salas** | Estructura física personalizada de cada sala: cantidad de filas, columnas, pasillos, tipos de butaca (Dbox, vacías) y numeración personalizada. |
-
----
-
-## 📦 Librerías y Dependencias Frontend Requeridas
-
-Si vas a migrar estos componentes de React Native/Expo a un proyecto web tradicional (React/Next.js) o a otra plataforma móvil, requerirás adoptar las siguientes dependencias clave o equivalentes:
-
-- **Ingesta de Documentos (Document Picker)**: `expo-document-picker` (en la web se puede migrar a un `<input type="file">` tradicional).
-- **Procesamiento de Excel**: Librerías de manejo de archivos de hojas de cálculo (ej. `xlsx`/SheetJS) para leer buffers de arrays y construir archivos.
-- **Generación de PDFs e Impresión**: `expo-print` y `expo-sharing` (en la web se utiliza directamente `window.print()` inyectando código HTML personalizado).
-- **Iconografía**: `MaterialCommunityIcons` (de `@expo/vector-icons`).
+> [!IMPORTANT]
+> **Relevancia para la migración de base de datos**:
+> Si vas a utilizar una base de datos propia distinta a Firebase, **no debes eliminar `dbService.ts`**.
+>
+> Este archivo actúa como una capa de abstracción intermedia (Patrón Repositorio / Middleware). Actualmente intercepta las llamadas estándar de Firestore en las pantallas (como `collection()`, `doc()`, `getDoc()`, `setDoc()`, `onSnapshot()`) y hace lo siguiente:
+> 1. Si detecta que la API REST local (Node/Docker) está activa, **traduce las consultas de la base de datos a peticiones HTTP `fetch` (JSON)** enviando tokens JWT para autorización.
+> 2. Si el servidor local no responde, activa un modo de respaldo (`fallbackModeActive = true`) y realiza las consultas directamente al SDK de Firebase Firestore.
+>
+> **Recomendación de migración**: Si el nuevo desarrollador quiere conectar la aplicación a un backend personalizado (como Node+PostgreSQL o Spring Boot+MySQL), **solo debe modificar el archivo `dbService.ts`** para que las llamadas apunten a sus nuevos endpoints. De esta forma, **no tendrá que modificar una sola línea de código en las pantallas de la interfaz (`ProgramacionTab`, `MarketingTab`, `ControlSalasScreen`)**, ya que estas seguirán consumiendo las mismas funciones de acceso a datos expuestas por este servicio.
+>
+> El archivo complementario **[firebaseConfig.ts](file:///home/julian/vacas-locas/serviciosMigracion/code/lib/firebaseConfig.ts)** únicamente inicializa el SDK de Firebase (Auth y Firestore) que sirve como respaldo secundario y almacena nombres de constantes globales.
