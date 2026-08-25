@@ -23,7 +23,7 @@ import { db as realFirestoreDb, auth } from "./firebaseConfig";
 
 // Base URL de la API local (se puede configurar mediante variables de entorno)
 // Reemplazar con la URL final del túnel de Cloudflare o la IP de tu servidor
-const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL || "https://api-cinemark.jariel.com.ar/api";
+const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL || "https://api.tu-servidor.com/api";
 
 // Estado global para rastrear si el servidor local está caído
 let fallbackModeActive = false;
@@ -659,7 +659,7 @@ export function httpsCallable(functionsInstance: any, functionName: string) {
     }
 
     try {
-      const token = process.env.EXPO_PUBLIC_API_TOKEN || "jariel2026";
+      const token = process.env.EXPO_PUBLIC_API_TOKEN || "TU_API_TOKEN_AQUÍ";
       const authToken = await getAuthToken();
 
       const headers: any = {
