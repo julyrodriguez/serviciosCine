@@ -1,0 +1,77 @@
+import { Platform } from "react-native";
+
+export const COLORS = {
+  bg: Platform.OS === "web" ? "var(--bg, #F8FAFC)" : "#F8FAFC",
+  bgMobile: Platform.OS === "web" ? "var(--bg-mobile, #F1F5F9)" : "#F1F5F9",
+  primary: Platform.OS === "web" ? "var(--primary, #890404)" : "#890404",
+  primaryDark: Platform.OS === "web" ? "var(--primary-dark, #6f0303)" : "#6f0303",
+  primarySoft: Platform.OS === "web" ? "var(--primary-soft, #FBEAEA)" : "#FBEAEA",
+  text: Platform.OS === "web" ? "var(--text, #0F172A)" : "#0F172A",
+  muted: Platform.OS === "web" ? "var(--muted, #64748B)" : "#64748B",
+  textSoft: Platform.OS === "web" ? "var(--text-soft, #64748B)" : "#64748B",
+  card: Platform.OS === "web" ? "var(--card, #FFFFFF)" : "#FFFFFF",
+  border: Platform.OS === "web" ? "var(--border, #E2E8F0)" : "#E2E8F0",
+  successBg: Platform.OS === "web" ? "var(--success-bg, #D1FAE5)" : "#D1FAE5",
+  success: Platform.OS === "web" ? "var(--success, #047857)" : "#047857",
+  danger: Platform.OS === "web" ? "var(--danger, #DC2626)" : "#DC2626",
+  dangerSoft: Platform.OS === "web" ? "var(--danger-soft, #FEE2E2)" : "#FEE2E2",
+  warning: Platform.OS === "web" ? "var(--warning, #8a5a00)" : "#8a5a00",
+  warningBg: Platform.OS === "web" ? "var(--warning-bg, #fff4d6)" : "#fff4d6",
+  warningBorder: Platform.OS === "web" ? "var(--warning-border, #ead9a5)" : "#ead9a5",
+  info: Platform.OS === "web" ? "var(--info, #1E40AF)" : "#1E40AF",
+  betaBg: Platform.OS === "web" ? "var(--beta-bg, #F5F3FF)" : "#F5F3FF",
+  betaBorder: Platform.OS === "web" ? "var(--beta-border, #8B5CF6)" : "#8B5CF6",
+  betaText: Platform.OS === "web" ? "var(--beta-text, #7C3AED)" : "#7C3AED",
+  betaTextSoft: Platform.OS === "web" ? "var(--beta-text-soft, #6D28D9)" : "#6D28D9",
+  betaBadgeBg: Platform.OS === "web" ? "var(--beta-badge-bg, #EDE9FE)" : "#EDE9FE",
+  betaFilePickerBg: Platform.OS === "web" ? "var(--beta-file-picker-bg, #F3E8FF)" : "#F3E8FF",
+  betaFilePickerText: Platform.OS === "web" ? "var(--beta-file-picker-text, #4C1D95)" : "#4C1D95",
+  betaDivider: Platform.OS === "web" ? "var(--beta-divider, #DDD6FE)" : "#DDD6FE",
+  betaBtnDisabled: Platform.OS === "web" ? "var(--beta-btn-disabled, #C084FC)" : "#C084FC",
+};
+
+export const THEME = {
+  fontSize: {
+    xs: 12,
+    sm: 14,
+    md: 16,
+    lg: 18,
+    xl: 22,
+    xxl: 26,
+  },
+  spacing: {
+    xs: 4,
+    sm: 8,
+    md: 12,
+    lg: 16,
+    xl: 24,
+    xxl: 32,
+  },
+  radius: {
+    sm: 8,
+    md: 12,
+    lg: 16,
+    xl: 20,
+    full: 9999,
+  },
+  colors: {
+    ...COLORS,
+    surface: COLORS.card,
+  },
+  shadow: {
+    web: {
+      shadowColor: "#000",
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.06,
+      shadowRadius: 8,
+      elevation: 2,
+    },
+    soft: {
+      shadowColor: "#000",
+      shadowOffset: { width: 0, height: 1 },
+      shadowOpacity: 0.08,
+      shadowRadius: 4,
+      elevation: 3,
+    },
+  },
+} as const;
